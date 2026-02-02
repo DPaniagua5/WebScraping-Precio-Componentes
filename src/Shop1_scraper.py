@@ -39,18 +39,18 @@ class Shop1Scraper:
 
     #Espera que los productos se carguen
     def Wait(self, timeout=30):
-        print("Esperando carga de productos.....")
+        #print("Esperando carga de productos.....")
         time.sleep(3)
 
         wait = WebDriverWait(self.driver, timeout)
 
         try:
             wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a.css-g5oay9, a[href*='/precios_stock_detallado/']")))
-            print(" Productos detectados en la página")
+            #print(" Productos detectados en la página")
             time.sleep(2)
             
             # Hacer múltiples scrolls para cargar todos los productos lazy-loaded
-            print("Haciendo scroll para cargar todos los productos...")
+            #print("Haciendo scroll para cargar todos los productos...")
             last_height = self.driver.execute_script("return document.body.scrollHeight")
             scroll_attempts = 0
             max_scrolls = 10
@@ -181,29 +181,29 @@ class Shop1Scraper:
     #Ejecuta el scraping
     def scrape(self):
         try:
-            print("=" * 70)
-            print("WEB SCRAPER RAM DDR4 NOTEBOOK - INTELAF.COM")
-            print("=" * 70)
+            # print("=" * 70)
+            # print("WEB SCRAPER RAM DDR4 NOTEBOOK TIENDA 1")
+            # print("=" * 70)
             
-            print("\n 1.) Configurando navegador...")
+            # print("\n 1.) Configurando navegador...")
             self.configure_driver()
-            print("** ChromeDriver instalado y configurado **")
+            #print("** ChromeDriver instalado y configurado **")
             
-            print(f"\n 2.) Navegando a pagina")
+            #print(f"\n 2.) Navegando a pagina")
             self.driver.get(self.url)
-            print("** Página cargada **")
+            #print("** Página cargada **")
             
-            print("\n3.) Esperando carga de contenido dinámico...")
+            #print("\n3.) Esperando carga de contenido dinámico...")
             self.Wait()
             
             
-            print("\n4.)  Extrayendo productos...")
+            #print("\n4.)  Extrayendo productos...")
             
             elementos = self.driver.find_elements(By.CSS_SELECTOR, "a.css-g5oay9")
             
             if not elementos:
-                print("   No se encontraron productos con a.css-g5oay9")
-                print("   Intentando selectores alternativos...")
+                #print("   No se encontraron productos con a.css-g5oay9")
+                #print("   Intentando selectores alternativos...")
                 
                 # Intentar otros selectores basados en la estructura
                 selectores_alternativos = [
@@ -216,16 +216,16 @@ class Shop1Scraper:
                 for selector in selectores_alternativos:
                     elementos = self.driver.find_elements(By.CSS_SELECTOR, selector)
                     if elementos:
-                        print(f"** Encontrados {len(elementos)} con: {selector} **")
+                        #print(f"** Encontrados {len(elementos)} con: {selector} **")
                         break
             else:
-                print(f"** Encontrados {len(elementos)} productos **")
+                print("\n")
             
             if not elementos:
                 print("\n** No se pudieron encontrar productos **")
                 return False
             
-            print(f"\n 5.) Procesando {len(elementos)} productos...")
+            #print(f"\n 5.) Procesando {len(elementos)} productos...")
             
             for i, elemento in enumerate(elementos, 1):
                 producto = self.find_product(elemento)
@@ -235,10 +235,10 @@ class Shop1Scraper:
                     self.productos.append(producto)
                     
                     
-            print(f"\n*** Total extraído: {len(self.productos)} productos ***")
+            #print(f"\n*** Total extraído: {len(self.productos)} productos ***")
             
             if self.productos:
-                print("\n 6.) Guardando resultados...")
+               #print("\n 6.) Guardando resultados...")
                 rows = []
                 today = date.today().isoformat()
 
@@ -256,8 +256,11 @@ class Shop1Scraper:
 
                 if rows:
                     supabase.table("ram_prices").upsert(rows).execute()
-
+                print("\n" + "=" * 70)
+                print(f"***    Insertados {len(rows)} datos de tienda 1. ***")
+                print("\n" + "=" * 70)
                 return True
+                
             else:
                 print("\n** No se extrajeron productos **")
                 return False
@@ -270,6 +273,6 @@ class Shop1Scraper:
             
         finally:
             if self.driver:
-                print("\n 7.) Cerrando navegador...")
+                #print("\n 7.) Cerrando navegador...")
                 self.driver.quit()
-                print("** Cerrado **")
+                #print("** Cerrado **")

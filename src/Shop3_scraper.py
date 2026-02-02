@@ -97,11 +97,11 @@ class Shop3Scraper:
                 print(" No hay datos para guardar")
                 return
 
-            print(" Enviando a Supabase...")
             res = supabase.table("ram_prices").upsert(rows).execute()
 
-            print(f" Insertados/actualizados: {len(rows)}")
-            
+            print(f"***    Insertados {len(rows)} datos de tienda 3.    ***")
+            print("\n" + "=" * 70)
+
             return True
         except Exception as e:
             print(f"Error: {e}")
