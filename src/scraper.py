@@ -5,9 +5,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from supabase_client import supabase
 import time
 import re
-from datetime import datetime
+from datetime import date
 
 class Shop1Scraper:
     def __init__(self, url=None, headless=True):
@@ -81,10 +82,8 @@ class Shop1Scraper:
 
     import re
 
-    def extraer_precio(texto: str) -> int | None:
-        
+    def extraer_precio(self, texto: str) -> int | None:
         match = re.search(r'Q\s*([\d,]+)', texto, re.IGNORECASE)
-        
         if not match:
             return None
         numero_str = match.group(1).replace(',', '')
@@ -92,14 +91,14 @@ class Shop1Scraper:
             return int(numero_str)
         except ValueError:
             return None
-        
+
     def find_product(self, elemento, index):
         product = {
             'id': index,
             'marca': '',
             'nombre': '',
-            'precio_normal': '',
-            'precio_efectivo': '',
+            'precio_normal': None,
+            'precio_efectivo': None,
             'capacidad': '',
             'frecuencia': '',
             'url': ''
@@ -140,19 +139,19 @@ class Shop1Scraper:
                 # Buscamos el elemento que contiene el texto "Precio normal"
                 precio_elem = elemento.find_element(By.XPATH, ".//span[contains(text(), 'Precio normal')]/..")
                 texto_completo = precio_elem.get_attribute('innerText')
-                product['precio_normal'] = extraer_precio(texto_completo)
+                product['precio_normal'] = self.extraer_precio(texto_completo)
             except:
                 pass
             # Extraer PRECIO BENEFICIO (span.css-15acwd8)
             try:
                 precio_beneficio_elem = elemento.find_element(By.CSS_SELECTOR, "span.css-15acwd8")
                 texto_completo = precio_beneficio_elem.text.strip()
-                product['precio_efectivo'] = extraer_precio(texto_completo)
+                product['precio_efectivo'] = self.extraer_precio(texto_completo)
             except:
                 try:
                     precio_beneficio_elem = elemento.find_element(By.CSS_SELECTOR, "span[class*='15acwd']")
                     texto_completo = precio_beneficio_elem.text.strip()
-                    product['precio_efectivo'] = extraer_precio(texto_completo)
+                    product['precio_efectivo'] = self.extraer_precio(texto_completo)
                 except:
                     pass
             
@@ -243,24 +242,26 @@ class Shop1Scraper:
                     
                     
             print(f"\n*** Total extraído: {len(self.productos)} productos ***")
-            
+            j=1
             if self.productos:
                 print("\n 6.) Guardando resultados...")
-                j = 1
                 for producto in self.productos:
-                    print(f"\n** Producto {j}: **")
-                    if producto['marca']:
-                        print(f"      Marca: {producto['marca']}")
-                    print(f"      Nombre: {producto['nombre'][:70]}")
-                    if producto['precio_normal']:
-                        print(f"      Precio: {producto['precio_normal']}")
-                    if producto['precio_efectivo']:
-                        print(f"      Precio efectivo: {producto['precio_efectivo']}")
-                    if producto['capacidad']:
-                        print(f"      Capacidad: {producto['capacidad']}")
-                    if producto['frecuencia']:
-                        print(f"      Frecuencia: {producto['frecuencia']}")
-                    j=j+1
+                    today = date.today().isoformat()
+                    rows = []
+                    rows.append({
+                        "store": "Intelaf",
+                        "marca": producto['marca'],
+                        "product_name": producto['nombre'],
+                        "price_normal": producto['precio_normal'],
+                        "price_cash": producto['precio_efectivo'],
+                        "capacity": producto['capacidad'],
+                        "frequency": producto['frecuencia'],
+                        "scraped_at": today
+                    })
+
+
+                    supabase.table("ram_prices").upsert(rows).execute()
+                    
                 return True
             else:
                 print("\n** No se extrajeron productos **")
