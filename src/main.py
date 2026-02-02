@@ -1,22 +1,25 @@
 import os
 import sys
 from dotenv import load_dotenv
-from scraper import Shop1Scraper
+from Shop1_scraper import Shop1Scraper
+#from Shop2_scraper import Shop2Scraper
+from Shop3_scraper import Shop3Scraper
 
 def main():
     load_dotenv()
 
-    url = os.getenv('R_Shop1')
+    url1 = os.getenv('R_Shop1')
+    url2 = os.getenv('R_Shop2')
+    url3 = os.getenv('R_Shop3')
 
     try:
-        scraper = Shop1Scraper(
-            url
-        )
+        scraper1 = Shop1Scraper(url1)
+        scraper3 = Shop3Scraper(url3)
 
-        exito = scraper.scrape()
-
+        exito1 = scraper1.scrape()
+        exito3 = scraper3.save_to_supabase()
         print("\n" + "=" * 70)
-        if exito:
+        if exito1 and exito3:
             print("** PROCESO COMPLETADO EXITOSAMENTE **")
             return 0
         else:

@@ -92,23 +92,17 @@ class Shop1Scraper:
         except ValueError:
             return None
 
-    def find_product(self, elemento, index):
+    def find_product(self, elemento):
         product = {
-            'id': index,
-            'marca': '',
             'nombre': '',
+            'marca': '',
             'precio_normal': None,
             'precio_efectivo': None,
             'capacidad': '',
-            'frecuencia': '',
-            'url': ''
+            'frecuencia': ''
         }
         
         try:
-            # Si el elemento es un enlace, obtener su URL
-            if elemento.tag_name == 'a':
-                product['url'] = elemento.get_attribute('href')
-            
             # Extraer MARCA (span.css-ynol38)
             try:
                 marca_elem = elemento.find_element(By.CSS_SELECTOR, "span.css-ynol38")
@@ -180,7 +174,7 @@ class Shop1Scraper:
                 if freq_match:
                     product['frecuencia'] = freq_match.group(1).replace(' ', '')
         except Exception as e:
-            print(f"Error procesando producto {index}: {e}")
+            print(f"Error procesando producto {e}")
         
         return product
     
@@ -234,20 +228,21 @@ class Shop1Scraper:
             print(f"\n 5.) Procesando {len(elementos)} productos...")
             
             for i, elemento in enumerate(elementos, 1):
-                producto = self.find_product(elemento, i)
+                producto = self.find_product(elemento)
                 
                 # Solo guardar si tiene nombre o precio
-                if producto['nombre'] or producto['precio_final']:
+                if producto['nombre'] or producto['precio_normal' or producto['precio_efectivo']]:
                     self.productos.append(producto)
                     
                     
             print(f"\n*** Total extraído: {len(self.productos)} productos ***")
-            j=1
+            
             if self.productos:
                 print("\n 6.) Guardando resultados...")
+                rows = []
+                today = date.today().isoformat()
+
                 for producto in self.productos:
-                    today = date.today().isoformat()
-                    rows = []
                     rows.append({
                         "store": "Intelaf",
                         "marca": producto['marca'],
@@ -259,9 +254,9 @@ class Shop1Scraper:
                         "scraped_at": today
                     })
 
-
+                if rows:
                     supabase.table("ram_prices").upsert(rows).execute()
-                    
+
                 return True
             else:
                 print("\n** No se extrajeron productos **")
