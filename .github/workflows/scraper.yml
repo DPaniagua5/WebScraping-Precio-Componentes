@@ -24,7 +24,6 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run scraper
-        working-directory: src
         env:
           R_Shop1: ${{ secrets.R_Shop1 }}
           sb_url: ${{ secrets.sb_url }}
