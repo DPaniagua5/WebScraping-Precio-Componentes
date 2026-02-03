@@ -79,14 +79,14 @@ class Shop6Scraper:
             price = self.parse_price(price_text)
             today = date.today().isoformat()
 
-            print("  Producto detectado:")
-            print("  Nombre:", product_name)
-            print("  Marca: ", self.obtener_marca(product_name))
-            print("  Capacidad:", capacity)
-            print("  Frecuencia:", frequency)
-            print("  Precio efectivo:", price)
-            print("  Precio normal: ", price)
-            print(f"\n")
+            # print("  Producto detectado:")
+            # print("  Nombre:", product_name)
+            # print("  Marca: ", self.obtener_marca(product_name))
+            # print("  Capacidad:", capacity)
+            # print("  Frecuencia:", frequency)
+            # print("  Precio efectivo:", price)
+            # print("  Precio normal: ", price)
+            # print(f"\n")
             
             return {
                 "store": "imeqmo",
