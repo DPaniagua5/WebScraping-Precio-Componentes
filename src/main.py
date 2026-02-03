@@ -8,6 +8,7 @@ from Shop4_scraper import Shop4Scraper
 from Shop5_scraper import Shop5Scraper
 from Shop6_scraper import Shop6Scraper
 from Shop7_scraper import Shop7Scraper
+from Shop8_scraper import Shop8Scraper
 
 def main():
     load_dotenv()
@@ -19,6 +20,8 @@ def main():
     url5 = os.getenv('R_Shop5')
     url6 = os.getenv('R_Shop6')
     url7 = os.getenv('R_Shop7')
+    url8 = os.getenv('R_Shop8')
+
     try:
         scraper1 = Shop1Scraper(url1)
         scraper2 = Shop2Scraper(url2)
@@ -27,6 +30,7 @@ def main():
         scraper5 = Shop5Scraper(url5)
         scraper6 = Shop6Scraper(url6)
         scraper7 = Shop7Scraper(url7)
+        scraper8 = Shop8Scraper(url8)
 
         exito1 = scraper1.scrape()
         exito2 = scraper2.save_to_supabase()
@@ -34,9 +38,11 @@ def main():
         exito4 = scraper4.save_to_supabase()
         exito5 = scraper5.save_to_supabase()
         exito6 = scraper6.save_to_supabase()
-        exito7 = scraper7.scrape()
-        if exito1 and exito2 and exito3 and exito4 and exito5 and exito6:
-        #if exito7:
+        exito7 = scraper7.save_to_supabase()
+        exito8 = scraper8.save_to_supabase()
+
+        if exito1 and exito2 and exito3 and exito4 and exito5 and exito6 and exito7 and exito8:
+        #if exito8:
             print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
