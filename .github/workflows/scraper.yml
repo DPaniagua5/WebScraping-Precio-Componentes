@@ -31,6 +31,7 @@ jobs:
           R_Shop4: ${{ secrets.R_Shop4 }}
           R_Shop5: ${{ secrets.R_Shop5 }}
           R_Shop6: ${{ secrets.R_Shop6 }}
+          R_Shop7: ${{ secrets.R_Shop7 }}
           sb_url: ${{ secrets.sb_url }}
           sb_secret: ${{ secrets.sb_secret }}
 
