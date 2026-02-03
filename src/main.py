@@ -42,7 +42,7 @@ def main():
         exito8 = scraper8.save_to_supabase()
 
         if exito1 and exito2 and exito3 and exito4 and exito5 and exito6 and exito7 and exito8:
-        #if exito8:
+        #if exito5:
             print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
@@ -53,7 +53,7 @@ def main():
         print("\n\n ***    Proceso interrumpido por el usuario    ***")
         return 130
     except Exception as e:
-        print(f"\n***    ERROR FATAL: {e}    ***")
+        print(f"\n ***    ERROR FATAL: {e}    ***")
         import traceback
         traceback.print_exc()
         return 1
