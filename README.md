@@ -1,4 +1,4 @@
-# Análisis de Precios de Memoria RAM (Guatemala)
+# Web-Scraping de Precios de Memoria RAM (Guatemala)
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
 ![Web Scraping](https://img.shields.io/badge/Web%20Scraping-Python-orange)

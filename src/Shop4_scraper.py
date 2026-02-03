@@ -112,7 +112,7 @@ class Shop4Scraper:
                 "store": "MacrosSistemas",
                 "marca": brand,
                 "product_name": product_name,
-                "price_normal": price,
+                "price_normal": price_normal,
                 "price_cash": price,
                 "capacity": capacity,
                 "frequency": frequency,

@@ -5,6 +5,7 @@ from Shop1_scraper import Shop1Scraper
 from Shop2_scraper import Shop2Scraper
 from Shop3_scraper import Shop3Scraper
 from Shop4_scraper import Shop4Scraper
+from Shop5_scraper import Shop5Scraper
 
 def main():
     load_dotenv()
@@ -13,20 +14,22 @@ def main():
     url2 = os.getenv('R_Shop2')
     url3 = os.getenv('R_Shop3')
     url4 = os.getenv('R_Shop4')
+    url5 = os.getenv('R_Shop5')
     try:
         scraper1 = Shop1Scraper(url1)
         scraper2 = Shop2Scraper(url2)
         scraper3 = Shop3Scraper(url3)
         scraper4 = Shop4Scraper(url4)
+        scraper5 = Shop5Scraper(url5)
 
         exito1 = scraper1.scrape()
         exito2 = scraper2.save_to_supabase()
         exito3 = scraper3.save_to_supabase()
         exito4 = scraper4.save_to_supabase()
+        exito5 = scraper5.save_to_supabase()
 
-        exito4 = scraper4.scrape()
-        if exito1 and exito2 and exito3 and exito4:
-        # if exito4:
+        if exito1 and exito2 and exito3 and exito4 and exito5:
+        #if exito5:
             print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
