@@ -95,7 +95,7 @@ class Shop8Scraper:
                 "store": "BROCS",
                 "marca": brand,
                 "product_name": product_name,
-                "stock": self.has_add_to_cart(p),
+                #"stock": self.has_add_to_cart(p),
                 "price_normal": price,
                 "price_cash": price,
                 "capacity": capacity,
