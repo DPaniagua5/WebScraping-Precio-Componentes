@@ -67,14 +67,14 @@ class Shop3Scraper:
         today = date.today().isoformat()
 
 
-        print("  Producto detectado:")
-        print("  Nombre:", product_name)
-        print("  Marca: ", product_name.split()[0])
-        print("  Capacidad:", capacity)
-        print("  Frecuencia:", frequency)
-        print("  Precio:", price)
-        print("  Disponible: ", available)
-        print(f"\n")
+        # print("  Producto detectado:")
+        # print("  Nombre:", product_name)
+        # print("  Marca: ", product_name.split()[0])
+        # print("  Capacidad:", capacity)
+        # print("  Frecuencia:", frequency)
+        # print("  Precio:", price)
+        # print("  Disponible: ", available)
+        # print(f"\n")
         
         return {
             "store": "Kemik",
