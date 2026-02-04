@@ -5,7 +5,6 @@ from Shop1_scraper import Shop1Scraper
 from Shop2_scraper import Shop2Scraper
 from Shop3_scraper import Shop3Scraper
 from Shop4_scraper import Shop4Scraper
-from Shop5_scraper import Shop5Scraper
 from Shop6_scraper import Shop6Scraper
 from Shop7_scraper import Shop7Scraper
 from Shop8_scraper import Shop8Scraper
@@ -27,7 +26,6 @@ def main():
         scraper2 = Shop2Scraper(url2)
         scraper3 = Shop3Scraper(url3)
         scraper4 = Shop4Scraper(url4)
-        scraper5 = Shop5Scraper(url5)
         scraper6 = Shop6Scraper(url6)
         scraper7 = Shop7Scraper(url7)
         scraper8 = Shop8Scraper(url8)
@@ -36,13 +34,12 @@ def main():
         exito2 = scraper2.save_to_supabase()
         exito3 = scraper3.save_to_supabase()
         exito4 = scraper4.save_to_supabase()
-        exito5 = scraper5.save_to_supabase()
         exito6 = scraper6.save_to_supabase()
         exito7 = scraper7.save_to_supabase()
         exito8 = scraper8.save_to_supabase()
 
-        if exito1 and exito2 and exito3 and exito4 and exito5 and exito6 and exito7 and exito8:
-        #if exito5:
+        if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8:
+        #if exito9:
             print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
@@ -63,6 +60,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-
-
-

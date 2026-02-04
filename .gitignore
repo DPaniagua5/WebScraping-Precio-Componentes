@@ -3,4 +3,6 @@ venv/
 env/
 .venv/
 
+src/Tienda5.py
+
 __pycache__/
