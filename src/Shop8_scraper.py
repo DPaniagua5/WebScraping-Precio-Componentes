@@ -55,16 +55,10 @@ class Shop8Scraper:
         match = re.search(r"\bDDR\s*([3-5])\b", text, re.I)
         return f"DDR{match.group(1)}" if match else None
     
-    def has_add_to_cart(self, product) -> bool:
-        return product.select_one(
-            "a.add_to_cart_button"
-        ) is not None
-
-
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one("h2.woocommerce-loop-product__title")
         price_container = p.select_one('span.woocommerce-Price-amount')
-        
+        available_container = p.select_one('span.icon-button')
         price_text = price_container.get_text(strip=True)    
         
         if not name_tag:
@@ -73,6 +67,18 @@ class Shop8Scraper:
         product_name = name_tag.get_text(strip=True)
         ddr = self.parse_ddr(product_name)
         if(self.es_notebook(product_name) and ddr == "DDR4"):
+            # Buscamos dentro del contenedor del producto
+            try:
+                # Intentamos encontrar el botón de añadir al carrito
+                boton_carrito = p.select_one("a.add_to_cart_button")
+                
+                if len(boton_carrito) > 0:
+                    available = True
+                else:
+                    available = False
+            except:
+                available = False
+
 
             capacity = self.parse_capacity(product_name)
             frequency = self.parse_frequency(product_name)
@@ -82,25 +88,25 @@ class Shop8Scraper:
 
 
             # print("  Producto detectado:")
-            # print("  Stock: ",self.has_add_to_cart(p))
             # print("  Nombre:", product_name)
             # print("  Marca: ", brand)
             # print("  Capacidad:", capacity)
             # print("  Frecuencia:", frequency)
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price)
+            # print("  Disponible: ", available)
             # print(f"\n")
             
             return {
                 "store": "BROCS",
                 "marca": brand,
                 "product_name": product_name,
-                #"stock": self.has_add_to_cart(p),
                 "price_normal": price,
                 "price_cash": price,
                 "capacity": capacity,
                 "frequency": frequency,
-                "scraped_at": today
+                "scraped_at": today, 
+                "available": available
             }
 
     def scrape(self) -> list[dict]:

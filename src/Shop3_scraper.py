@@ -42,9 +42,19 @@ class Shop3Scraper:
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one("h3")
         price_container = p.select_one('[data-component="Price"]')
+        
+        available_container = p.select_one('span')
+
         if price_container:
             integer_div = price_container.find("div")
             price_text = integer_div.get_text(strip=True)
+
+        if available_container:
+            available_text = available_container.get_text(strip=True)
+            if available_text == 'Agotado':
+                available = False
+            else:
+                available = True
 
         if not name_tag:
             return None
@@ -57,13 +67,14 @@ class Shop3Scraper:
         today = date.today().isoformat()
 
 
-        # print("  Producto detectado:")
-        # print("  Nombre:", product_name)
-        # print("  Marca: ", product_name.split()[0])
-        # print("  Capacidad:", capacity)
-        # print("  Frecuencia:", frequency)
-        # print("  Precio:", price)
-        # print(f"\n")
+        print("  Producto detectado:")
+        print("  Nombre:", product_name)
+        print("  Marca: ", product_name.split()[0])
+        print("  Capacidad:", capacity)
+        print("  Frecuencia:", frequency)
+        print("  Precio:", price)
+        print("  Disponible: ", available)
+        print(f"\n")
         
         return {
             "store": "Kemik",
@@ -73,7 +84,8 @@ class Shop3Scraper:
             "price_cash": price,
             "capacity": capacity,
             "frequency": frequency,
-            "scraped_at": today
+            "scraped_at": today, 
+            "available": available
         }
 
     def scrape(self) -> list[dict]:

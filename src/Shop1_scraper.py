@@ -99,7 +99,8 @@ class Shop1Scraper:
             'precio_normal': None,
             'precio_efectivo': None,
             'capacidad': '',
-            'frecuencia': ''
+            'frecuencia': '',
+            'disponible': True
         }
         
         try:
@@ -148,9 +149,13 @@ class Shop1Scraper:
                     product['precio_efectivo'] = self.extraer_precio(texto_completo)
                 except:
                     pass
-            
-            precios_disponibles = []
-            
+
+            # Extraer disponibilidad:
+            titulo_stock = elemento.get_attribute("title")
+            if "No hay existencias" in titulo_stock:
+                product['disponible'] = False
+            else:
+                product['disponible'] = True
 
             # Extraer CAPACIDAD del nombre
             if product['nombre']:
@@ -181,11 +186,11 @@ class Shop1Scraper:
     #Ejecuta el scraping
     def scrape(self):
         try:
-            # print("=" * 70)
-            # print("WEB SCRAPER RAM DDR4 NOTEBOOK TIENDA 1")
-            # print("=" * 70)
+            #print("=" * 70)
+            #print("WEB SCRAPER RAM DDR4 NOTEBOOK TIENDA 1")
+            #print("=" * 70)
             
-            # print("\n 1.) Configurando navegador...")
+            #print("\n 1.) Configurando navegador...")
             self.configure_driver()
             #print("** ChromeDriver instalado y configurado **")
             
@@ -216,13 +221,13 @@ class Shop1Scraper:
                 for selector in selectores_alternativos:
                     elementos = self.driver.find_elements(By.CSS_SELECTOR, selector)
                     if elementos:
-                        #print(f"** Encontrados {len(elementos)} con: {selector} **")
+                        print(f"** Encontrados {len(elementos)} con: {selector} **")
                         break
             else:
                 print("\n")
             
             if not elementos:
-                print("\n** No se pudieron encontrar productos **")
+                #print("\n** No se pudieron encontrar productos **")
                 return False
             
             #print(f"\n 5.) Procesando {len(elementos)} productos...")
@@ -251,14 +256,15 @@ class Shop1Scraper:
                         "price_cash": producto['precio_efectivo'],
                         "capacity": producto['capacidad'],
                         "frequency": producto['frecuencia'],
-                        "scraped_at": today
+                        "scraped_at": today,
+                        "available": producto['disponible']
                     })
 
                 if rows:
                     supabase.table("ram_prices").upsert(rows).execute()
-                print("\n" + "=" * 70)
-                print(f"***    Insertados {len(rows)} datos de tienda 1. ***")
-                print("\n" + "=" * 70)
+                    print("\n" + "=" * 70)
+                    print(f"***    Insertados {len(rows)} datos de tienda 1. ***")
+                    print("\n" + "=" * 70)
                 return True
                 
             else:

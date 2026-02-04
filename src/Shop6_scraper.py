@@ -96,7 +96,8 @@ class Shop6Scraper:
                 "price_cash": price,
                 "capacity": capacity,
                 "frequency": frequency,
-                "scraped_at": today
+                "scraped_at": today,
+                "available": True
             }
 
     def scrape(self) -> list[dict]:

@@ -4,5 +4,6 @@ env/
 .venv/
 
 src/Tienda5.py
+src/Pruebas.py
 
 __pycache__/

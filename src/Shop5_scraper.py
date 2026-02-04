@@ -105,7 +105,8 @@ class Shop5Scraper:
             "price_cash": price,
             "capacity": capacity,
             "frequency": frequency,
-            "scraped_at": self.today
+            "scraped_at": self.today,
+            "available": True
         }
 
 
