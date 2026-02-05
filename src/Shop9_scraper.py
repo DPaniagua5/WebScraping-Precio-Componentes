@@ -167,7 +167,7 @@ class Shop9Scraper:
 
             res = supabase.table("ram_prices").upsert(rows).execute()
 
-            print(f"***    Insertados {len(rows)} datos de tienda 4.    ***")
+            print(f"***    Insertados {len(rows)} datos de tienda 9.    ***")
             print("\n" + "=" * 70)
 
             return True
