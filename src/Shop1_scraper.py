@@ -100,7 +100,8 @@ class Shop1Scraper:
             'precio_efectivo': None,
             'capacidad': '',
             'frecuencia': '',
-            'disponible': True
+            'disponible': True, 
+            'url': ''
         }
         
         try:
@@ -152,10 +153,15 @@ class Shop1Scraper:
 
             # Extraer disponibilidad:
             titulo_stock = elemento.get_attribute("title")
+            url_tag = elemento.get_attribute("href")
             if "No hay existencias" in titulo_stock:
                 product['disponible'] = False
             else:
                 product['disponible'] = True
+                if not url_tag.startswith("http"):
+                    product['url'] = f"https://www.intelaf.com{url_tag}"
+                else:
+                    product['url'] = url_tag
 
             # Extraer CAPACIDAD del nombre
             if product['nombre']:
@@ -243,7 +249,7 @@ class Shop1Scraper:
             #print(f"\n*** Total extraído: {len(self.productos)} productos ***")
             
             if self.productos:
-               #print("\n 6.) Guardando resultados...")
+                print("\n 6.) Guardando resultados...")
                 rows = []
                 today = date.today().isoformat()
 
@@ -257,7 +263,8 @@ class Shop1Scraper:
                         "capacity": producto['capacidad'],
                         "frequency": producto['frecuencia'],
                         "scraped_at": today,
-                        "available": producto['disponible']
+                        "available": producto['disponible'], 
+                        "url" : producto['url']
                     })
 
                 if rows:

@@ -66,6 +66,13 @@ class Shop2Scraper:
 
         if not name_tag:
             return None
+        else:
+            link_tag = name_tag.select_one("a")
+            if link_tag:
+                url = link_tag.get('href')
+                if url and not url.startswith('http'):
+                    url = "https://www.rech.com.gt" + url
+                
 
         product_name = name_tag.get_text(strip=True)
         if(self.es_notebook(product_name)):
@@ -83,6 +90,7 @@ class Shop2Scraper:
             # print("  Frecuencia:", frequency)
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price_normal)
+            # print("  Url: ", url)
             # print(f"\n")
             
             return {
@@ -94,7 +102,8 @@ class Shop2Scraper:
                 "capacity": capacity,
                 "frequency": frequency,
                 "scraped_at": today,
-                "available": True
+                "available": True,
+                "url": url
             }
 
     def scrape(self) -> list[dict]:

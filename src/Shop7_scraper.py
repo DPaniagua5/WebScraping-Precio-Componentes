@@ -65,6 +65,12 @@ class Shop7Scraper:
         name_tag = p.select_one("p.product-title")
         price_container = p.select_one('span.woocommerce-Price-amount')
 
+        url_tag = name_tag.select_one("a")
+        url = url_tag.get("href")
+        if url and not url.startswith('http'):
+            url = "https://www.acosa.com.gt" + url
+
+
         price_text = price_container.get_text(strip=True)    
         
         if not name_tag:
@@ -86,6 +92,7 @@ class Shop7Scraper:
             # print("  Frecuencia:", frequency)
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price)
+            # print("  Url: ", url)
             # print(f"\n")
             
             return {
@@ -97,7 +104,8 @@ class Shop7Scraper:
                 "capacity": capacity,
                 "frequency": frequency,
                 "scraped_at": today, 
-                "available": True
+                "available": True,
+                "url": url 
             }
 
     def scrape(self) -> list[dict]:

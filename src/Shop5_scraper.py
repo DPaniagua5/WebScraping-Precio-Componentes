@@ -70,6 +70,10 @@ class Shop5Scraper:
         price_container = p.select_one("span.price-new")
         desc_tag = p.select_one("div.description")
         
+        url = name_tag.get("href")
+        if url and not url.startswith('http'):
+            url = "https://www.pacifiko.com" + url
+
         if not name_tag or not price_container:
             return None
 
@@ -95,6 +99,7 @@ class Shop5Scraper:
         # print("  Capacidad:", capacity)
         # print("  Frecuencia:", frequency)
         # print("  Precio:", price)
+        # print("  Url: ", url)
         # print("\n")
 
         return {
@@ -106,7 +111,8 @@ class Shop5Scraper:
             "capacity": capacity,
             "frequency": frequency,
             "scraped_at": self.today,
-            "available": True
+            "available": True,
+            "url": url
         }
 
 

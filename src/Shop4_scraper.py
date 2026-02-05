@@ -80,6 +80,11 @@ class Shop4Scraper:
         name_tag = p.select_one("h2.woocommerce-loop-product__title")
         price_normal_container = p.select_one("span.price span.woocommerce-Price-amount")
         price_container = p.select_one("div.footerCardItemProduct div.precio-efectivo")     
+        url_tag = p.select_one("a")
+
+        url = url_tag.get("href")
+        if url and not url.startswith('http'):
+            url = "https://www.macrosistemas.com" + url
 
         price_normal = self.parse_price(price_normal_container.get_text(strip=True))
         price = self.parse_price(price_container.get_text(strip=True))
@@ -106,6 +111,7 @@ class Shop4Scraper:
             # print("  Frecuencia:", frequency)
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price_normal)
+            # print("  Url: ", url)
             # print(f"\n")
             
             return {
@@ -117,7 +123,8 @@ class Shop4Scraper:
                 "capacity": capacity,
                 "frequency": frequency,
                 "scraped_at": today,
-                "available": True
+                "available": True,
+                "url": url
             }
 
     def scrape(self) -> list[dict]:

@@ -58,18 +58,21 @@ class Shop8Scraper:
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one("h2.woocommerce-loop-product__title")
         price_container = p.select_one('span.woocommerce-Price-amount')
-        available_container = p.select_one('span.icon-button')
         price_text = price_container.get_text(strip=True)    
         
+        url_tag = p.select_one("a")
+        url = url_tag.get("href")
+        if url and not url.startswith('http'):
+            url = "https://www.brocs.gt" + url
+
+
         if not name_tag:
             return None
 
         product_name = name_tag.get_text(strip=True)
         ddr = self.parse_ddr(product_name)
         if(self.es_notebook(product_name) and ddr == "DDR4"):
-            # Buscamos dentro del contenedor del producto
             try:
-                # Intentamos encontrar el botón de añadir al carrito
                 boton_carrito = p.select_one("a.add_to_cart_button")
                 
                 if len(boton_carrito) > 0:
@@ -95,6 +98,7 @@ class Shop8Scraper:
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price)
             # print("  Disponible: ", available)
+            # print("  Url: ", url)
             # print(f"\n")
             
             return {
@@ -106,7 +110,8 @@ class Shop8Scraper:
                 "capacity": capacity,
                 "frequency": frequency,
                 "scraped_at": today, 
-                "available": available
+                "available": available,
+                "url": url
             }
 
     def scrape(self) -> list[dict]:

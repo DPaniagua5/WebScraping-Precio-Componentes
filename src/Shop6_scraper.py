@@ -66,7 +66,12 @@ class Shop6Scraper:
         price_container = p.select_one('span.oe_currency_value')
 
         price_text = price_container.get_text(strip=True)    
-        
+
+        url_tag = name_tag.select_one("a")
+        url = url_tag.get("href")
+        if url and not url.startswith('http'):
+            url = "https://www.imeqmo.com" + url
+
         if not name_tag:
             return None
 
@@ -86,6 +91,7 @@ class Shop6Scraper:
             # print("  Frecuencia:", frequency)
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price)
+            # print("  Url: ", url)
             # print(f"\n")
             
             return {
@@ -97,7 +103,8 @@ class Shop6Scraper:
                 "capacity": capacity,
                 "frequency": frequency,
                 "scraped_at": today,
-                "available": True
+                "available": True,
+                "url": url
             }
 
     def scrape(self) -> list[dict]:

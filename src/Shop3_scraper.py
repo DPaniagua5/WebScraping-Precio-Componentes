@@ -65,7 +65,10 @@ class Shop3Scraper:
         frequency = self.parse_frequency(product_name)
         price = int(re.sub(r"[^\d]", "", price_text))
         today = date.today().isoformat()
-
+        url = p.get("href")
+        if url and not url.startswith('http'):
+            url = "https://www.kemik.gt" + url
+        
 
         # print("  Producto detectado:")
         # print("  Nombre:", product_name)
@@ -74,6 +77,7 @@ class Shop3Scraper:
         # print("  Frecuencia:", frequency)
         # print("  Precio:", price)
         # print("  Disponible: ", available)
+        # print("  Url: ", url)
         # print(f"\n")
         
         return {
@@ -85,7 +89,8 @@ class Shop3Scraper:
             "capacity": capacity,
             "frequency": frequency,
             "scraped_at": today, 
-            "available": available
+            "available": available,
+            "url": url
         }
 
     def scrape(self) -> list[dict]:
