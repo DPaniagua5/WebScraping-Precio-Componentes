@@ -51,7 +51,7 @@ class Shop6Scraper:
 
     def es_notebook(self, *texts: str) -> bool:
         full = " ".join(t for t in texts if t).lower()
-        return any(k in full for k in ["sodimm","notebook", "laptop", "sodimm", "dram"])
+        return any(k in full for k in ["sodimm","notebook", "laptop", "so-dimm", "dram"])
 
     def parse_frequency(self, text: str) -> str | None:
         match = re.search(r"\b(\d{4})\s*(MHz|MT/s)\b", text, re.I)

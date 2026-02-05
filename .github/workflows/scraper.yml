@@ -33,6 +33,7 @@ jobs:
           R_Shop6: ${{ secrets.R_Shop6 }}
           R_Shop7: ${{ secrets.R_Shop7 }}
           R_Shop8: ${{ secrets.R_Shop8 }}
+          R_Shop9: ${{ secrets.R_Shop9 }}
           sb_url: ${{ secrets.sb_url }}
           sb_secret: ${{ secrets.sb_secret }}
 
