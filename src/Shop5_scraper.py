@@ -137,7 +137,7 @@ class Shop5Scraper:
                 print(" No hay datos para guardar")
                 return
 
-            res = supabase.table("ram_prices").upsert(rows).execute()
+            supabase.table("ram_prices").upsert(rows).execute()
 
             print(f"***    Insertados {len(rows)} datos de tienda 5.    ***")
             print("\n" + "=" * 70)

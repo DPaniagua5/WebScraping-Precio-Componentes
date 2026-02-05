@@ -115,6 +115,11 @@ class Shop9Scraper:
             price, price_normal = self.extraer_precios(p)
             price = self.parse_price(price)
             price_normal = self.parse_price(price_normal)
+
+            if price == None:
+                price = 0
+            if price_normal == None:
+                price_normal = 0    
             # print("  Producto detectado:")
             # print("  Nombre: ", product_name)
             # print("  Marca: ", brand),
