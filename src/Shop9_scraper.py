@@ -112,7 +112,7 @@ class Shop9Scraper:
             today = date.today().isoformat()
             brand = self.parse_brand(product_name)
 
-            price, price_normal = self.extraer_precios(p)
+            price_normal, price = self.extraer_precios(p)
             price = self.parse_price(price)
             price_normal = self.parse_price(price_normal)
 
