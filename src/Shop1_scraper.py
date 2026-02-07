@@ -249,7 +249,7 @@ class Shop1Scraper:
             #print(f"\n*** Total extraído: {len(self.productos)} productos ***")
             
             if self.productos:
-                print("\n 6.) Guardando resultados...")
+                # print("\n 6.) Guardando resultados...")
                 rows = []
                 today = date.today().isoformat()
 

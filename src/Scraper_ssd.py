@@ -92,7 +92,6 @@ class ShopScraper:
         if available_container != None:
             if not(self.available_tag == ""):
                 available_ = p.select_one(f'{self.available_tag}') 
-                print("available_: ", available_)
                 available_text = available_.get_text(strip=True)
                 if available_text == "Agotado":
                     return False
@@ -159,16 +158,16 @@ class ShopScraper:
                 price = 0
             if price_normal == None:
                 price_normal = 0    
-            print("  Producto detectado:")
-            print("  Nombre: ", product_name)
-            print("  Marca: ", brand),
-            print("  Capacidad:", capacity)
-            print("  Tipo: ", tipo)
-            print("  Precio efectivo:", price)
-            print("  Precio normal: ",  price_normal)
-            print("  Url: ", url)
-            print("  Disponible: ", available)
-            print(f"\n")
+            # print("  Producto detectado:")
+            # print("  Nombre: ", product_name)
+            # print("  Marca: ", brand),
+            # print("  Capacidad:", capacity)
+            # print("  Tipo: ", tipo)
+            # print("  Precio efectivo:", price)
+            # print("  Precio normal: ",  price_normal)
+            # print("  Url: ", url)
+            # print("  Disponible: ", available)
+            # print(f"\n")
             
             return {
                 "store": self.store,
@@ -193,7 +192,7 @@ class ShopScraper:
             if product:
                 rows.append(product)
         
-        print(f"***    Encontrados {len(rows)} datos de tienda {self.store}.    ***")
+        # print(f"***    Encontrados {len(rows)} datos de tienda {self.store}.    ***")
 
         return rows
     

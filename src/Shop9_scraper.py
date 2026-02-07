@@ -20,7 +20,7 @@ class Shop9Scraper:
         self.today = date.today().isoformat()
     
     def fetch(self) -> BeautifulSoup:
-        r = requests.get(self.url, headers = HEADERS, timeout = 20)
+        r = requests.get(self.url, headers = HEADERS, timeout = 50)
         r.raise_for_status()
         return BeautifulSoup(r.text, "html.parser")
     

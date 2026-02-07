@@ -49,7 +49,7 @@ def main():
         scraping_ssd()
 
         if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2:
-        #if exito9:
+        # if exito_ssd:
             print("***    PROCESO RAM COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
@@ -82,27 +82,23 @@ def scraping_ssd():
     while True:
         config = load_shop_config(shop_index)
         if not config:
+            print(f"No más configuraciones encontradas. Finalizando en tienda {shop_index - 1}.")
             break
-        print("Config: ", config)
-        # URL base
-        url = os.getenv(f"S_Shop{shop_index}")
-        print("url: ", url)
-        if url:
-            process_shop(url, config)
-        else:
-            shop_index += 1
+        
+        base_url = os.getenv(f"S_Shop{shop_index}")
+        if base_url:
+            process_shop(base_url, config)
+        
+        tab = 1
+        while True:
+            tab_url = os.getenv(f"S_Shop{shop_index}_{tab}")
+            if not tab_url:
+                break  # No hay más pestañas para esta tienda
             
-        # pestañas
-            tab = 1
-            while True:
-                tab_url = os.getenv(f"S_Shop{shop_index}_{tab}")
-                if not tab_url:
-                    break
-                print("tab_url: ",tab_url)
-                process_shop(tab_url, config)
-                tab += 1
+            process_shop(tab_url, config)
+            tab += 1
 
-            shop_index += 1
+        shop_index += 1
 
 def process_shop(url: str, cfg: dict):
     scraper = ShopScraper(
