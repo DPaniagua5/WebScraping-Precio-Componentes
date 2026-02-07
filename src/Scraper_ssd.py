@@ -15,7 +15,7 @@ HEADERS = {
 
 
 class ShopScraper:
-    def __init__(self, url:str, store:str, tag_padre:str, tag_producto: str, tag_price:str, tipo_price:str, tag_price_cash:str, tipo_price_cash:str):
+    def __init__(self, url:str, store:str, tag_padre:str, tag_producto: str, tag_price:str, tipo_price:str, tag_price_cash:str, tipo_price_cash:str, dominio:str, available_tag:str):
         self.url = url
         self.store = store
         self.tag_padre = tag_padre
@@ -24,6 +24,8 @@ class ShopScraper:
         self.tag_price_cash = tag_price_cash
         self.tipo_price = tipo_price
         self.tipo_price_cash = tipo_price_cash
+        self.dominio = dominio
+        self.available_tag = available_tag
         self.today = date.today().isoformat()
     
     def fetch(self) -> BeautifulSoup:
@@ -53,17 +55,17 @@ class ShopScraper:
         return int(number)
 
     def es_disk(self, texto: str):
-        palabras_clave = ["nvme","unidad de estado solido","estado solido","ssd", "m.2", "nv3"]
+        palabras_clave = ["nvme","m.2", "nv3","unidad de estado solido","estado solido","ssd"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["externo"]
+        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 
     def parse_brand(self, texto:str):
-        marcas_conocidas = ["Kingston"]
+        marcas_conocidas = ["Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","startech.com","xpg","lexar","kioxia","crucial","transcend"]
         texto_upper = texto.upper()
         
         for marca in marcas_conocidas:
@@ -86,9 +88,18 @@ class ShopScraper:
         return "SATA"
 
     def def_available(self, p):
-        contenedor_disponibilidad = p.select_one("div.disponible")
-        if contenedor_disponibilidad:
-            return False
+        available_container = p.select_one(f"{self.available_tag}")
+        if available_container != None:
+            if not(self.available_tag == ""):
+                available_ = p.select_one(f'{self.available_tag}') 
+                print("available_: ", available_)
+                available_text = available_.get_text(strip=True)
+                if available_text == "Agotado":
+                    return False
+                else:
+                    return True
+            else:
+                return True
         else:
             return True
 
@@ -98,6 +109,7 @@ class ShopScraper:
         contenedor_efectivo = p.select_one(f"{self.tipo_price}.{self.tag_price}")
         contenedor_precio = p.select_one(f"{self.tipo_price_cash}.{self.tag_price_cash}")
         
+
         if contenedor_precio:
             oferta = contenedor_precio.find("ins")
             if oferta:
@@ -118,11 +130,20 @@ class ShopScraper:
             return None
 
         product_name = name_tag.get_text(strip=True)
-        url_tag = name_tag.find('a')
         
+        url_tag = name_tag.find('a')
+        url_tag_option = p.get('href')
+
         if url_tag:
             url = url_tag.get('href')
-        
+        elif url_tag_option:
+            url = url_tag_option
+        else:
+            url = ""
+
+        if not(url.startswith(self.dominio)):
+            url = self.dominio + url
+
         if(self.es_disk(product_name) and not(self.es_externo(product_name))):
 
             capacity = self.parse_capacity(product_name)
@@ -138,16 +159,16 @@ class ShopScraper:
                 price = 0
             if price_normal == None:
                 price_normal = 0    
-            # print("  Producto detectado:")
-            # print("  Nombre: ", product_name)
-            # print("  Marca: ", brand),
-            # print("  Capacidad:", capacity)
-            # print("  Tipo: ", tipo)
-            # print("  Precio efectivo:", price)
-            # print("  Precio normal: ",  price_normal)
-            # print("  Url: ", url)
-            # print("  Disponible: ", available)
-            # print(f"\n")
+            print("  Producto detectado:")
+            print("  Nombre: ", product_name)
+            print("  Marca: ", brand),
+            print("  Capacidad:", capacity)
+            print("  Tipo: ", tipo)
+            print("  Precio efectivo:", price)
+            print("  Precio normal: ",  price_normal)
+            print("  Url: ", url)
+            print("  Disponible: ", available)
+            print(f"\n")
             
             return {
                 "store": self.store,
@@ -171,6 +192,8 @@ class ShopScraper:
             product = self.parse_product(p)
             if product:
                 rows.append(product)
+        
+        print(f"***    Encontrados {len(rows)} datos de tienda {self.store}.    ***")
 
         return rows
     

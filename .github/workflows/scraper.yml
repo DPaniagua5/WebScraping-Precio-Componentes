@@ -35,7 +35,13 @@ jobs:
           R_Shop8: ${{ secrets.R_Shop8 }}
           R_Shop9_1: ${{ secrets.R_Shop9_1 }}
           R_Shop9_2: ${{ secrets.R_Shop9_2 }}
-          S_Shop2: ${{ secrets.S_SHOP2 }}
+          S_Shop1: ${{ secrets.S_SHOP1 }}
+          S_Shop2_1: ${{ secrets.S_SHOP2_1}}
+          S_Shop2_2: ${{ secrets.S_SHOP2_2}}
+          S_Shop2_3: ${{ secrets.S_SHOP2_3}}
+          
+          Conf_Shop1: ${{ secrets.Conf_Shop1}}
+          Conf_Shop2: ${{ secrets.Conf_Shop2}}
           sb_url: ${{ secrets.sb_url }}
           sb_secret: ${{ secrets.sb_secret }}
 

@@ -1,4 +1,4 @@
-import os
+import os, json
 import sys
 from dotenv import load_dotenv
 from Shop1_scraper import Shop1Scraper
@@ -68,13 +68,58 @@ def main():
     finally:
         print("=" * 70 + "\n")
 
+import os
+
+def load_shop_config(shop_index: int) -> dict | None:
+    raw = os.getenv(f"Conf_Shop{shop_index}")
+    if not raw:
+        return None
+    return json.loads(raw)
+
 def scraping_ssd():
-    for i in range(2,5):
-        url = os.getenv(f"S_Shop{i}")   
+    shop_index = 1
+
+    while True:
+        config = load_shop_config(shop_index)
+        if not config:
+            break
+        print("Config: ", config)
+        # URL base
+        url = os.getenv(f"S_Shop{shop_index}")
+        print("url: ", url)
         if url:
-            scraper = ShopScraper(url,"Rech", "div.product-details","h2.product-title", "product-price-normal","span","product-price:not(.product-price-normal)", "span")
-            rows = scraper.scrape()
-            scraper.save_to_supabase(rows)
+            process_shop(url, config)
+        else:
+            shop_index += 1
+            
+        # pestañas
+            tab = 1
+            while True:
+                tab_url = os.getenv(f"S_Shop{shop_index}_{tab}")
+                if not tab_url:
+                    break
+                print("tab_url: ",tab_url)
+                process_shop(tab_url, config)
+                tab += 1
+
+            shop_index += 1
+
+def process_shop(url: str, cfg: dict):
+    scraper = ShopScraper(
+        url=url,
+        store=cfg["store"],
+        tag_padre=cfg["tag_padre"],
+        tag_producto=cfg["tag_producto"],
+        tag_price=cfg["tag_price"],
+        tipo_price=cfg["tipo_price"],
+        tag_price_cash=cfg["tag_price_cash"],
+        tipo_price_cash=cfg["tipo_price_cash"],
+        dominio=cfg["dominio"],
+        available_tag=cfg["available_tag"]
+    )
+
+    rows = scraper.scrape()
+    scraper.save_to_supabase(rows)
 
 
 if __name__ == "__main__":
