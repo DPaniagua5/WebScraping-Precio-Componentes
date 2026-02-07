@@ -9,6 +9,7 @@ from Shop6_scraper import Shop6Scraper
 from Shop7_scraper import Shop7Scraper
 from Shop8_scraper import Shop8Scraper
 from Shop9_scraper import Shop9Scraper
+from Scraper_ssd import ShopScraper
 
 def main():
     load_dotenv()
@@ -45,13 +46,16 @@ def main():
         exito9_1 = scraper9_1.save_to_supabase()
         exito9_2 = scraper9_2.save_to_supabase()
 
+        scraping_ssd()
+
         if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2:
         #if exito9:
-            print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
+            print("***    PROCESO RAM COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
-            print("***    PROCESO COMPLETADO CON ADVERTENCIAS    ***")
+            print("***    PROCESO RAM COMPLETADO CON ADVERTENCIAS    ***")
             return 1
+        
             
     except KeyboardInterrupt:
         print("\n\n ***    Proceso interrumpido por el usuario    ***")
@@ -63,6 +67,14 @@ def main():
         return 1
     finally:
         print("=" * 70 + "\n")
+
+def scraping_ssd():
+    for i in range(2,5):
+        url = os.getenv(f"S_Shop{i}")   
+        if url:
+            scraper = ShopScraper(url,"Rech", "div.product-details","h2.product-title", "product-price-normal","span","product-price:not(.product-price-normal)", "span")
+            rows = scraper.scrape()
+            scraper.save_to_supabase(rows)
 
 
 if __name__ == "__main__":

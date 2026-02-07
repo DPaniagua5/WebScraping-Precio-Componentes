@@ -15,13 +15,15 @@ HEADERS = {
 
 
 class ShopScraper:
-    def __init__(self, url:str, store:str, tag_padre:str, tag_producto: str, tag_price:str, tag_price_cash:str):
+    def __init__(self, url:str, store:str, tag_padre:str, tag_producto: str, tag_price:str, tipo_price:str, tag_price_cash:str, tipo_price_cash:str):
         self.url = url
         self.store = store
         self.tag_padre = tag_padre
         self.tag_producto = tag_producto
         self.tag_price = tag_price
         self.tag_price_cash = tag_price_cash
+        self.tipo_price = tipo_price
+        self.tipo_price_cash = tipo_price_cash
         self.today = date.today().isoformat()
     
     def fetch(self) -> BeautifulSoup:
@@ -39,16 +41,16 @@ class ShopScraper:
             return f"{matchgb.group(1)}GB"
         return None
 
-    # def parse_price(self, text: str) -> int | None:
-    #     if not text:
-    #         return None
-        
-    #     match = re.search(r'([\d,]+)(?:\.\d+)?', text)
-    #     if not match:
-    #         return None
+    def parse_price(self, text: str) -> int | None:
+        if not text:
+            return None
+        text = str(text)
+        match = re.search(r'([\d,]+)(?:\.\d+)?', text)
+        if not match:
+            return None
 
-    #     number = match.group(1).replace(",", "")
-    #     return int(number)
+        number = match.group(1).replace(",", "")
+        return int(number)
 
     def es_disk(self, texto: str):
         palabras_clave = ["nvme","unidad de estado solido","estado solido","ssd", "m.2", "nv3"]
@@ -83,33 +85,35 @@ class ShopScraper:
         
         return "SATA"
 
-    # def extraer_precios(self, soup_item):
-    #     precio_normal = None
-    #     precio_efectivo = None
-    #     contenedor_precio = soup_item.find("span", class_="price")
+    def def_available(self, p):
+        contenedor_disponibilidad = p.select_one("div.disponible")
+        if contenedor_disponibilidad:
+            return False
+        else:
+            return True
+
+    def extraer_precios(self, p):
+        precio_normal = None
+        precio_efectivo = None
+        contenedor_efectivo = p.select_one(f"{self.tipo_price}.{self.tag_price}")
+        contenedor_precio = p.select_one(f"{self.tipo_price_cash}.{self.tag_price_cash}")
         
-    #     if contenedor_precio:
-    #         oferta = contenedor_precio.find("ins")
-    #         if oferta:
-    #             precio_normal = oferta.get_text(strip=True)
-    #         else:
-    #             precio_normal = contenedor_precio.get_text(strip=True).split(' ')[0]
+        if contenedor_precio:
+            oferta = contenedor_precio.find("ins")
+            if oferta:
+                precio_normal = oferta.get_text(strip=True)
+            else:
+                precio_normal = contenedor_precio.get_text(strip=True)
+        if contenedor_efectivo:
+            precio_efectivo = contenedor_efectivo.get_text(strip=True)
+        else:
+            precio_efectivo = precio_normal
 
-    #     div_efectivo = soup_item.find("div", class_="beneficio-efectivo-catalogo")
-    #     if div_efectivo:
-    #         texto_efectivo = div_efectivo.get_text(strip=True)
-    #         if "Q" in texto_efectivo:
-    #             precio_efectivo = "Q" + texto_efectivo.split("Q")[-1].strip()
-    #     else:
-    #         precio_efectivo = precio_normal
-
-    #     return precio_normal, precio_efectivo
+        return precio_normal, precio_efectivo
 
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one(self.tag_producto)
-        #stock_container = p.select_one("p.wd-product-stock")
         
-        #stock_text = stock_container.get_text(strip=True)
         if not name_tag:
             return None
 
@@ -119,49 +123,44 @@ class ShopScraper:
         if url_tag:
             url = url_tag.get('href')
         
-        
-        
-        # if stock_container:
-        #     if stock_text != "Out of stock":
-        #         available = True
-        #     else:
-        #         available = False
         if(self.es_disk(product_name) and not(self.es_externo(product_name))):
 
             capacity = self.parse_capacity(product_name)
-            #frequency = self.parse_frequency(product_name)
             today = date.today().isoformat()
             brand = self.parse_brand(product_name)
             tipo = self.parse_type(product_name)
-            #price_normal, price = self.extraer_precios(p)
-            #price = self.parse_price(price)
-            #price_normal = self.parse_price(price_normal)
+            price_normal, price = self.extraer_precios(p)
+            price = self.parse_price(price)
+            price_normal = self.parse_price(price_normal)
+            available = self.def_available(p)
 
-            # if price == None:
-            #     price = 0
-            # if price_normal == None:
-            #     price_normal = 0    
-            print("  Producto detectado:")
-            print("  Nombre: ", product_name)
-            print("  Marca: ", brand),
-            print("  Capacidad:", capacity)
-            print("  Tipo: ", tipo)
-            #print("  Precio efectivo:", self.parse_price(price))
-            #print("  Precio normal: ", self.parse_price(price_normal)       )
-            print("  Url: ", url)
-            print(f"\n")
+            if price == None:
+                price = 0
+            if price_normal == None:
+                price_normal = 0    
+            # print("  Producto detectado:")
+            # print("  Nombre: ", product_name)
+            # print("  Marca: ", brand),
+            # print("  Capacidad:", capacity)
+            # print("  Tipo: ", tipo)
+            # print("  Precio efectivo:", price)
+            # print("  Precio normal: ",  price_normal)
+            # print("  Url: ", url)
+            # print("  Disponible: ", available)
+            # print(f"\n")
             
             return {
                 "store": self.store,
                 "marca": brand,
                 "product_name": product_name,
-                #"price_normal": price_normal,
-                #"price_cash": price,
+                "capacity":capacity,
+                "type":tipo,
+                "price_cash": price_normal,
+                "price_normal": price,
                 "capacity": capacity,
-                #"frequency": frequency,
                 "scraped_at": today,
-                "available": True,
-                #"url": url
+                "available": available,
+                "url": url
             }
 
     def scrape(self) -> list[dict]:
@@ -174,3 +173,36 @@ class ShopScraper:
                 rows.append(product)
 
         return rows
+    
+    def deduplicate_rows(self, rows: list[dict]) -> list[dict]:
+        unique = {}
+
+        for row in rows:
+            key = (
+                row["store"],
+                row["product_name"],
+                row["scraped_at"]
+            )
+            unique[key] = row  # si se repite, se queda el último
+
+        return list(unique.values())
+
+
+    def save_to_supabase(self, rows: list[dict]):
+        if not rows:
+            return
+
+        rows = self.deduplicate_rows(rows)
+
+        response = (
+            supabase
+            .table("ssd_prices")
+            .upsert(
+                rows,
+                on_conflict="store,product_name,scraped_at"
+            )
+            .execute()
+        )
+        print("\n" + "=" * 70)
+        print(f"***    Insertados {len(rows)} datos de tienda {self.store}.    ***")
+        print("\n" + "=" * 70)
