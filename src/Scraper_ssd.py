@@ -55,12 +55,12 @@ class ShopScraper:
         return int(number)
 
     def es_disk(self, texto: str):
-        palabras_clave = ["nvme","m.2", "nv3","unidad de estado solido","estado solido","ssd"]
+        palabras_clave = ["ssd","nvme","m.2","nv3","unidad de estado solido","estado solido","unidad de estado sólido","estado sólido"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores"]
+        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores","hdd","disco duro","portable"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 
@@ -124,27 +124,26 @@ class ShopScraper:
 
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one(self.tag_producto)
-        
         if not name_tag:
             return None
 
         product_name = name_tag.get_text(strip=True)
-        
         url_tag = name_tag.find('a')
         url_tag_option = p.get('href')
+        url_tag_option1 = p.select_one('a')
 
         if url_tag:
             url = url_tag.get('href')
         elif url_tag_option:
             url = url_tag_option
+        elif url_tag_option1:
+            url = url_tag_option1.get('href')
         else:
             url = ""
 
         if not(url.startswith(self.dominio)):
             url = self.dominio + url
-
         if(self.es_disk(product_name) and not(self.es_externo(product_name))):
-
             capacity = self.parse_capacity(product_name)
             today = date.today().isoformat()
             brand = self.parse_brand(product_name)
