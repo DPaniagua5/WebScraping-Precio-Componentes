@@ -93,7 +93,8 @@ class ShopScraper:
             if not(self.available_tag == ""):
                 available_ = p.select_one(f'{self.available_tag}') 
                 available_text = available_.get_text(strip=True)
-                if available_text == "Agotado":
+                print("available_text: ",available_text)
+                if available_text == "Agotado" or available_text == "cartshop-whiteLeer más":
                     return False
                 else:
                     return True
