@@ -63,7 +63,7 @@ class ShopScraper:
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video"]
+        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 
