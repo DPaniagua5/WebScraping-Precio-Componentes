@@ -26,35 +26,35 @@ def main():
     url9_2 = os.getenv('R_Shop9_2')
 
     try:
-        # scraper1 = Shop1Scraper(url1)
-        # scraper2 = Shop2Scraper(url2)
-        # scraper3 = Shop3Scraper(url3)
-        # scraper4 = Shop4Scraper(url4)
-        # scraper6 = Shop6Scraper(url6)
-        # scraper7 = Shop7Scraper(url7)
-        # scraper8 = Shop8Scraper(url8)
-        # scraper9_1 = Shop9Scraper(url9_1)
-        # scraper9_2 = Shop9Scraper(url9_2)
+        scraper1 = Shop1Scraper(url1)
+        scraper2 = Shop2Scraper(url2)
+        scraper3 = Shop3Scraper(url3)
+        scraper4 = Shop4Scraper(url4)
+        scraper6 = Shop6Scraper(url6)
+        scraper7 = Shop7Scraper(url7)
+        scraper8 = Shop8Scraper(url8)
+        scraper9_1 = Shop9Scraper(url9_1)
+        scraper9_2 = Shop9Scraper(url9_2)
 
-        # exito1 = scraper1.scrape()
-        # exito2 = scraper2.save_to_supabase()
-        # exito3 = scraper3.save_to_supabase()
-        # exito4 = scraper4.save_to_supabase()
-        # exito6 = scraper6.save_to_supabase()
-        # exito7 = scraper7.save_to_supabase()
-        # exito8 = scraper8.save_to_supabase()
-        # exito9_1 = scraper9_1.save_to_supabase()
-        # exito9_2 = scraper9_2.save_to_supabase()
+        exito1 = scraper1.scrape()
+        exito2 = scraper2.save_to_supabase()
+        exito3 = scraper3.save_to_supabase()
+        exito4 = scraper4.save_to_supabase()
+        exito6 = scraper6.save_to_supabase()
+        exito7 = scraper7.save_to_supabase()
+        exito8 = scraper8.save_to_supabase()
+        exito9_1 = scraper9_1.save_to_supabase()
+        exito9_2 = scraper9_2.save_to_supabase()
 
         scraping_ssd()
 
-        # if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2:
+        if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2:
         # if exito_ssd:
-        #     print("***    PROCESO RAM COMPLETADO EXITOSAMENTE    ***")
-        #     return 0
-        # else:
-        #     print("***    PROCESO RAM COMPLETADO CON ADVERTENCIAS    ***")
-        #     return 1
+            print("***    PROCESO RAM COMPLETADO EXITOSAMENTE    ***")
+            return 0
+        else:
+            print("***    PROCESO RAM COMPLETADO CON ADVERTENCIAS    ***")
+            return 1
         
             
     except KeyboardInterrupt:
@@ -115,7 +115,7 @@ def process_shop(url: str, cfg: dict):
     )
 
     rows = scraper.scrape()
-    # scraper.save_to_supabase(rows)
+    scraper.save_to_supabase(rows)
 
 
 if __name__ == "__main__":

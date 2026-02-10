@@ -58,17 +58,17 @@ class ShopScraper:
         return int(number)
 
     def es_disk(self, texto: str):
-        palabras_clave = ["ssd","nvme","m.2","nv3","unidad de estado solido","estado solido","unidad de estado sólido","estado sólido"]
+        palabras_clave = ["tb","gb","ssd","nvme","m.2","nv3","unidad de estado solido","estado solido","unidad de estado sólido","estado sólido"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa"]
+        palabras_excluir = ["wd","512e","hot swap","hot-swap","hot","externo", "adaptador", "videovigilancia","surveillance", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa","vigilancia","usb","firmware","nas"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 
     def parse_brand(self, texto:str):
-        marcas_conocidas = ["Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","startech.com","xpg","lexar","kioxia","crucial","transcend"]
+        marcas_conocidas = ["hot swap","wd","Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","startech.com","xpg","lexar","kioxia","crucial","transcend","seagate"]
         texto_upper = texto.upper()
         
         for marca in marcas_conocidas:
@@ -158,16 +158,16 @@ class ShopScraper:
                 price = 0
             if price_normal == None:
                 price_normal = 0    
-            print("  Producto detectado:")
-            print("  Nombre: ", product_name)
-            print("  Marca: ", brand),
-            print("  Capacidad:", capacity)
-            print("  Tipo: ", tipo)
-            print("  Precio efectivo:", price)
-            print("  Precio normal: ",  price_normal)
-            print("  Url: ", url)
-            print("  Disponible: ", available)
-            print(f"\n")
+            # print("  Producto detectado:")
+            # print("  Nombre: ", product_name)
+            # print("  Marca: ", brand),
+            # print("  Capacidad:", capacity)
+            # print("  Tipo: ", tipo)
+            # print("  Precio efectivo:", price)
+            # print("  Precio normal: ",  price_normal)
+            # print("  Url: ", url)
+            # print("  Disponible: ", available)
+            # print(f"\n")
             
             return {
                 "store": self.store,
