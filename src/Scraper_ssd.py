@@ -29,19 +29,22 @@ class ShopScraper:
         self.today = date.today().isoformat()
     
     def fetch(self) -> BeautifulSoup:
-        r = requests.get(self.url, headers = HEADERS, timeout = 20)
+        r = requests.get(self.url, headers = HEADERS, timeout = 50)
         r.raise_for_status()
         return BeautifulSoup(r.text, "html.parser")
     
     def parse_capacity(self, text: str) -> str | None:
-        matchgb = re.search(r'(\d{1,3})\s*GB', text, re.I)
-        matchtb = re.search(r'(\d{1,2})\s*TB', text, re.I)
-        if matchtb:
-            valor_tb = int(matchtb.group(1))
-            return f"{valor_tb * 1000}GB"
-        if matchgb:
-            return f"{matchgb.group(1)}GB"
-        return None
+        match = re.search(r'(\d+(?:\.\d+)?)\s*(TB|GB|G|T)', text, re.I)
+        if not match:
+            return None
+
+        value = float(match.group(1))
+        unit = match.group(2).upper()
+
+        if unit == "TB":
+            return f"{int(value * 1000)}GB"
+
+        return f"{int(value)}GB"
 
     def parse_price(self, text: str) -> int | None:
         if not text:
@@ -60,7 +63,7 @@ class ShopScraper:
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores","hdd","disco duro","portable"]
+        palabras_excluir = ["externo", "adaptador", "videovigilancia", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 
@@ -93,8 +96,7 @@ class ShopScraper:
             if not(self.available_tag == ""):
                 available_ = p.select_one(f'{self.available_tag}') 
                 available_text = available_.get_text(strip=True)
-                print("available_text: ",available_text)
-                if available_text == "Agotado" or available_text == "cartshop-whiteLeer más":
+                if available_text == "Agotado" or available_text == "cartshop-whiteLeer más" or available_text == "Out of stock":
                     return False
                 else:
                     return True
@@ -127,7 +129,6 @@ class ShopScraper:
         name_tag = p.select_one(self.tag_producto)
         if not name_tag:
             return None
-
         product_name = name_tag.get_text(strip=True)
         url_tag = name_tag.find('a')
         url_tag_option = p.get('href')
@@ -153,21 +154,20 @@ class ShopScraper:
             price = self.parse_price(price)
             price_normal = self.parse_price(price_normal)
             available = self.def_available(p)
-
             if price == None:
                 price = 0
             if price_normal == None:
                 price_normal = 0    
-            # print("  Producto detectado:")
-            # print("  Nombre: ", product_name)
-            # print("  Marca: ", brand),
-            # print("  Capacidad:", capacity)
-            # print("  Tipo: ", tipo)
-            # print("  Precio efectivo:", price)
-            # print("  Precio normal: ",  price_normal)
-            # print("  Url: ", url)
-            # print("  Disponible: ", available)
-            # print(f"\n")
+            print("  Producto detectado:")
+            print("  Nombre: ", product_name)
+            print("  Marca: ", brand),
+            print("  Capacidad:", capacity)
+            print("  Tipo: ", tipo)
+            print("  Precio efectivo:", price)
+            print("  Precio normal: ",  price_normal)
+            print("  Url: ", url)
+            print("  Disponible: ", available)
+            print(f"\n")
             
             return {
                 "store": self.store,
