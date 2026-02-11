@@ -93,14 +93,14 @@ class Shop5Scraper:
         frequency = self.parse_frequency(full_text)
         price = self.parse_price(price_text)
 
-        print("  Producto detectado:")
-        print("  Nombre:", product_name)
-        print("  Marca:", product_name.split()[0])
-        print("  Capacidad:", capacity)
-        print("  Frecuencia:", frequency)
-        print("  Precio:", price)
-        print("  Url: ", url)
-        print("\n")
+        # print("  Producto detectado:")
+        # print("  Nombre:", product_name)
+        # print("  Marca:", product_name.split()[0])
+        # print("  Capacidad:", capacity)
+        # print("  Frecuencia:", frequency)
+        # print("  Precio:", price)
+        # print("  Url: ", url)
+        # print("\n")
 
         return {
             "store": "Pacifiko",

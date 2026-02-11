@@ -63,7 +63,7 @@ class ShopScraper:
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["wd","512e","hot swap","hot-swap","hot","externo", "adaptador", "videovigilancia","surveillance", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa","vigilancia","usb","firmware","nas"]
+        palabras_excluir = ["ddr4","ram","ddr5","wd","512e","hot swap","hot-swap","hot","externo", "adaptador", "videovigilancia","surveillance", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa","vigilancia","usb","firmware","nas"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 

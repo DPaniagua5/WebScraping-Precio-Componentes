@@ -10,7 +10,7 @@ import time
 import re
 from datetime import date
 
-class Shop1Scraper:
+class ShopScraper:
     def __init__(self, url=None, headless=True):
         self.url = url
         self.productos = []
@@ -193,7 +193,7 @@ class Shop1Scraper:
     def scrape(self):
         try:
             print("=" * 70)
-            print("WEB SCRAPER RAM DDR4 NOTEBOOK TIENDA 1")
+            print("WEB SCRAPER DISCOS DUROS SSD INTELAF")
             print("=" * 70)
             
             print("\n 1.) Configurando navegador...")
@@ -269,6 +269,7 @@ class Shop1Scraper:
 
                 if rows:
                     # supabase.table("ram_prices").upsert(rows).execute()
+                    print(rows)
                     print("\n" + "=" * 70)
                     print(f"***    Insertados {len(rows)} datos de tienda 1. ***")
                     print("\n" + "=" * 70)
