@@ -38,18 +38,20 @@ jobs:
           S_Shop1: ${{ secrets.S_SHOP1 }}
           S_Shop2_1: ${{ secrets.S_SHOP2_1 }}
           S_Shop2_2: ${{ secrets.S_SHOP2_2 }}
-          S_Shop2_3: ${{ secrets.S_SHOP2_3 }}
           S_Shop3: ${{ secrets.S_Shop3 }}
           S_Shop4: ${{ secrets.S_Shop4 }}
           S_Shop5_1: ${{ secrets.S_Shop5_1 }}
           S_Shop5_2: ${{ secrets.S_SHOP5_1 }}
           S_Shop6: ${{ secrets.S_Shop6 }}
+          S_Shop7_1: ${{ secrets.S_SHOP7_1 }}
+          S_Shop7_2: ${{ secrets.S_SHOP7_2 }}
           Conf_Shop1: ${{ secrets.Conf_Shop1 }}
           Conf_Shop2: ${{ secrets.Conf_Shop2 }}
           Conf_Shop3: ${{ secrets.CONF_SHOP3 }}
           Conf_Shop4: ${{ secrets.CONF_SHOP4 }}
           Conf_Shop5: ${{ secrets.CONF_SHOP5 }}
           Conf_Shop6: ${{ secrets.Conf_Shop6 }}
+          Conf_Shop7: ${{ secrets.CONF_SHOP7 }}
           sb_url: ${{ secrets.sb_url }}
           sb_secret: ${{ secrets.sb_secret }}
 
