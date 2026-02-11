@@ -34,7 +34,7 @@ class ShopScraper:
         return BeautifulSoup(r.text, "html.parser")
     
     def parse_capacity(self, text: str) -> str | None:
-        match = re.search(r'(\d+(?:\.\d+)?)\s*(TB|GB|G|T)', text, re.I)
+        match = re.search(r'(\d+(?:\.\d+)?)\s*(TB|GB|G)', text, re.I)
         if not match:
             return None
 
@@ -63,12 +63,25 @@ class ShopScraper:
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["ddr4","ram","ddr5","wd","512e","hot swap","hot-swap","sd","hot","externo", "adaptador", "videovigilancia","surveillance", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa","vigilancia","usb","firmware","nas"]
+        palabras_excluir = [
+            "ddr4","ram","ddr5","wd","512e","hot swap","hot-swap",
+            "externo","adaptador","videovigilancia","surveillance","sd"
+            "portátil","enterprise","servidor","servidores",
+            "hdd","portable","video","externa","vigilancia","usb",
+            "firmware","nas"
+        ]
+
         texto_min = texto.lower()
-        return any(clave in texto_min for clave in palabras_excluir)
+
+        for palabra in palabras_excluir:
+            if re.search(rf'\b{re.escape(palabra)}\b', texto_min):
+                return True
+
+        return False
+
 
     def parse_brand(self, texto:str):
-        marcas_conocidas = ["Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","startech.com","xpg","lexar","kioxia","crucial","transcend","seagate"]
+        marcas_conocidas = ["Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","hiksemi","startech.com","xpg","lexar","kioxia","crucial","transcend","seagate","quimera"]
         texto_upper = texto.upper()
         
         for marca in marcas_conocidas:
@@ -79,10 +92,10 @@ class ShopScraper:
 
     def parse_type(self, text: str) -> str:
         text = text.lower()   
-        if re.search(r'nvme|nv3|gen\s*[345]', text):
-            return "NVMe" 
         if "m.2" in text:
             return "M.2"
+        if re.search(r'nvme|nv3|gen\s*[345]', text):
+            return "NVMe"
         if any(clave in text for clave in ["estado solido", "ssd", "sata"]):
             return "SATA"
         if "hdd" in text or "duro" in text:
