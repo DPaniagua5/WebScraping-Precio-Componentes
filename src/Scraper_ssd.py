@@ -63,12 +63,12 @@ class ShopScraper:
         return any(clave in texto_min for clave in palabras_clave)
     
     def es_externo(self, texto:str):
-        palabras_excluir = ["ddr4","ram","ddr5","wd","512e","hot swap","hot-swap","hot","externo", "adaptador", "videovigilancia","surveillance", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa","vigilancia","usb","firmware","nas"]
+        palabras_excluir = ["ddr4","ram","ddr5","wd","512e","hot swap","hot-swap","sd","hot","externo", "adaptador", "videovigilancia","surveillance", "portátil", "enterprise", "servidor", "servidores","hdd","portable","video","externa","vigilancia","usb","firmware","nas"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_excluir)
 
     def parse_brand(self, texto:str):
-        marcas_conocidas = ["hot swap","wd","Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","startech.com","xpg","lexar","kioxia","crucial","transcend","seagate"]
+        marcas_conocidas = ["Kingston","samsung","hp","hikvision","brocs","dahua","sandisk","adata","msi","dell","patriot","mushkin","western digital","hiksimi","startech.com","xpg","lexar","kioxia","crucial","transcend","seagate"]
         texto_upper = texto.upper()
         
         for marca in marcas_conocidas:
@@ -187,7 +187,6 @@ class ShopScraper:
         soup = self.fetch()
         products = soup.select(self.tag_padre)
         rows = []
-        print(f"Tienda Procesada:{self.store} ")
         for p in products:
             product = self.parse_product(p)
             if product:
