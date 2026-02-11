@@ -29,7 +29,7 @@ class ShopScraper:
         self.today = date.today().isoformat()
     
     def fetch(self) -> BeautifulSoup:
-        r = requests.get(self.url, headers = HEADERS, timeout = 50)
+        r = requests.get(self.url, headers = HEADERS, timeout = 150)
         r.raise_for_status()
         return BeautifulSoup(r.text, "html.parser")
     
@@ -187,6 +187,7 @@ class ShopScraper:
         soup = self.fetch()
         products = soup.select(self.tag_padre)
         rows = []
+        print(f"Tienda Procesada:{self.store} ")
         for p in products:
             product = self.parse_product(p)
             if product:
