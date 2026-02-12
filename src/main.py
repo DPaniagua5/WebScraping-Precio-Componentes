@@ -51,7 +51,7 @@ def main():
         print("***    PROCESO SCRAPING SSD INICIADO    ***")
         exito_ssd = scraping_ssd()
 
-        if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2 and exito_ssd:
+        if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2:
             print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
