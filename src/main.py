@@ -10,7 +10,7 @@ from Shop7_scraper import Shop7Scraper
 from Shop8_scraper import Shop8Scraper
 from Shop9_scraper import Shop9Scraper
 from Scraper_ssd import ShopScraper
-from SShop8_scraper import ShopScraper
+from SShop8_scraper import SpecialShopScraper
 def main():
     load_dotenv()
 
@@ -26,6 +26,8 @@ def main():
     url9_2 = os.getenv('R_Shop9_2')
     
     try:
+        print("***    INICIO DEL SCRAPING DE RAM    ***")
+            
         scraper1 = Shop1Scraper(url1)
         scraper2 = Shop2Scraper(url2)
         scraper3 = Shop3Scraper(url3)
@@ -46,16 +48,18 @@ def main():
         exito9_1 = scraper9_1.save_to_supabase()
         exito9_2 = scraper9_2.save_to_supabase()
 
-        scraping_ssd()
+        print("***    PROCESO SCRAPING SSD INICIADO    ***")
+        exito_ssd = scraping_ssd()
 
-        if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2:
-        # if exito_ssd:
-            print("***    PROCESO RAM COMPLETADO EXITOSAMENTE    ***")
+        if exito1 and exito2 and exito3 and exito4 and exito6 and exito7 and exito8 and exito9_1 and exito9_2 and exito_ssd:
+            print("***    PROCESO COMPLETADO EXITOSAMENTE    ***")
             return 0
         else:
-            print("***    PROCESO RAM COMPLETADO CON ADVERTENCIAS    ***")
+            print("***    PROCESO COMPLETADO CON ADVERTENCIAS    ***")
             return 1
         
+        
+
             
     except KeyboardInterrupt:
         print("\n\n ***    Proceso interrumpido por el usuario    ***")
@@ -80,7 +84,7 @@ def scraping_ssd():
     shop_index = 1
     url_S = os.getenv('S_Shop9')
     if url_S:
-        scraper = ShopScraper(url_S,headless=True)
+        scraper = SpecialShopScraper(url_S,headless=True)
         productos = scraper.scrape()
 
     while True:

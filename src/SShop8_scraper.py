@@ -11,7 +11,7 @@ import re
 from datetime import date
 
 
-class ShopScraper:
+class SpecialShopScraper:
 
     def __init__(self, url:str, headless=True):
         self.url = url
