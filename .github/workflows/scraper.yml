@@ -45,6 +45,7 @@ jobs:
           S_Shop6: ${{ secrets.S_Shop6 }}
           S_Shop7_1: ${{ secrets.S_SHOP7_1 }}
           S_Shop7_2: ${{ secrets.S_SHOP7_2 }}
+          S_Shop9: ${{ secrets.S_Shop9 }}
           Conf_Shop1: ${{ secrets.Conf_Shop1 }}
           Conf_Shop2: ${{ secrets.Conf_Shop2 }}
           Conf_Shop3: ${{ secrets.CONF_SHOP3 }}

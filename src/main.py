@@ -10,7 +10,7 @@ from Shop7_scraper import Shop7Scraper
 from Shop8_scraper import Shop8Scraper
 from Shop9_scraper import Shop9Scraper
 from Scraper_ssd import ShopScraper
-
+from SShop8_scraper import ShopScraper
 def main():
     load_dotenv()
 
@@ -24,7 +24,7 @@ def main():
     url8 = os.getenv('R_Shop8')
     url9_1 = os.getenv('R_Shop9_1')
     url9_2 = os.getenv('R_Shop9_2')
-
+    
     try:
         scraper1 = Shop1Scraper(url1)
         scraper2 = Shop2Scraper(url2)
@@ -78,6 +78,10 @@ def load_shop_config(shop_index: int) -> dict | None:
 
 def scraping_ssd():
     shop_index = 1
+    url_S = os.getenv('S_Shop9')
+    if url_S:
+        scraper = ShopScraper(url_S,headless=True)
+        productos = scraper.scrape()
 
     while True:
         config = load_shop_config(shop_index)
