@@ -1,16 +1,30 @@
-name: Revelar Todos Los Secretos
+name: Daily RAM Price Scraper
 
 on:
+  schedule:
+    - cron: '0 14 * * *'  # 08:00 Guatemala (UTC-6)
   workflow_dispatch:
 
 jobs:
-  reveal-secrets:
+  scrape:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Imprimir variables codificadas
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run scraper
         env:
-          # RAM Secrets
           R_Shop1: ${{ secrets.R_Shop1 }}
           R_Shop2: ${{ secrets.R_Shop2 }}
           R_Shop3: ${{ secrets.R_Shop3 }}
@@ -21,8 +35,6 @@ jobs:
           R_Shop8: ${{ secrets.R_Shop8 }}
           R_Shop9_1: ${{ secrets.R_Shop9_1 }}
           R_Shop9_2: ${{ secrets.R_Shop9_2 }}
-
-          # SSD Secrets
           S_Shop1: ${{ secrets.S_SHOP1 }}
           S_Shop2_1: ${{ secrets.S_SHOP2_1 }}
           S_Shop2_2: ${{ secrets.S_SHOP2_2 }}
@@ -34,8 +46,6 @@ jobs:
           S_Shop7_1: ${{ secrets.S_SHOP7_1 }}
           S_Shop7_2: ${{ secrets.S_SHOP7_2 }}
           S_Shop9: ${{ secrets.S_Shop9 }}
-
-          # Config Secrets
           Conf_Shop1: ${{ secrets.Conf_Shop1 }}
           Conf_Shop2: ${{ secrets.Conf_Shop2 }}
           Conf_Shop3: ${{ secrets.CONF_SHOP3 }}
@@ -43,33 +53,8 @@ jobs:
           Conf_Shop5: ${{ secrets.CONF_SHOP5 }}
           Conf_Shop6: ${{ secrets.Conf_Shop6 }}
           Conf_Shop7: ${{ secrets.CONF_SHOP7 }}
-
-          # Supabase Secrets
           sb_url: ${{ secrets.sb_url }}
           sb_secret: ${{ secrets.sb_secret }}
 
         run: |
-          python3 -c "
-          import os, base64
-
-          secrets = [
-              'R_Shop1', 'R_Shop2', 'R_Shop3', 'R_Shop4', 'R_Shop5',
-              'R_Shop6', 'R_Shop7', 'R_Shop8', 'R_Shop9_1', 'R_Shop9_2',
-              'S_Shop1', 'S_Shop2_1', 'S_Shop2_2', 'S_Shop3', 'S_Shop4',
-              'S_Shop5_1', 'S_Shop5_2', 'S_Shop6', 'S_Shop7_1', 'S_Shop7_2', 'S_Shop9',
-              'Conf_Shop1', 'Conf_Shop2', 'Conf_Shop3', 'Conf_Shop4',
-              'Conf_Shop5', 'Conf_Shop6', 'Conf_Shop7',
-              'sb_url', 'sb_secret'
-          ]
-
-          for name in secrets:
-              val = os.getenv(name, '')
-              if val:
-                  b64_val = base64.b64encode(val.encode('utf-8')).decode('utf-8')
-                  # Insertamos un delimitador '-' en la mitad para omitir la censura
-                  mid = len(b64_val) // 2
-                  obfuscated = b64_val[:mid] + '-' + b64_val[mid:]
-                  print(f'{name}:{obfuscated}')
-              else:
-                  print(f'{name}:EMPTY')
-          "
+          python src/main.py
