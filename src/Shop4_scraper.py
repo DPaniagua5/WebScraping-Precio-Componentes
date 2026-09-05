@@ -34,7 +34,21 @@ class Shop4Scraper:
 
     def parse_ddr(self, text: str) -> str | None:
         match = re.search(r"\bDDR\s*([3-5])\b", text, re.I)
-        return f"DDR{match.group(1)}" if match else None
+        if match:
+            return f"DDR{match.group(1)}"
+        
+        # Fallback: inferir por frecuencia si no dice "DDR" explícitamente
+        freq_match = re.search(r"\b(\d{4})\s*(MHz|MT/s)?\b", text, re.I)
+        if freq_match:
+            freq = int(freq_match.group(1))
+            if freq in (1600, 1866, 2133):
+                return "DDR3"
+            elif freq in (2133, 2400, 2666, 2933, 3200, 3600):
+                return "DDR4"
+            elif freq in (4800, 5200, 5600, 6000, 6400):
+                return "DDR5"
+        
+        return None
 
     def parse_price(self, text: str) -> int | None:
         if not text:
@@ -68,7 +82,7 @@ class Shop4Scraper:
         return True
 
     def es_notebook(self, texto: str):
-        palabras_clave = ["notebook", "laptop"]
+        palabras_clave = ["notebook", "laptop", "sodimm", "so-dimm"]
         texto_min = texto.lower()
         return any(clave in texto_min for clave in palabras_clave)
     
