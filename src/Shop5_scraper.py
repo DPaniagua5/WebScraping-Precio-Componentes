@@ -64,6 +64,9 @@ class Shop5Scraper:
             return False
 
         return True
+    def parse_ddr(self, text: str) -> str | None:
+        match = re.search(r"\bDDR\s*([2-5])\b", text, re.I)
+        return f"DDR{match.group(1)}" if match else None
 
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one("h4 a")
@@ -88,7 +91,9 @@ class Shop5Scraper:
 
         if not self.es_notebook(product_name, description):
             return None
-
+        ddr = self.parse_ddr(full_text)
+        if ddr != "DDR4":
+            return None
         capacity = self.parse_capacity(full_text)
         frequency = self.parse_frequency(full_text)
         price = self.parse_price(price_text)
@@ -137,7 +142,7 @@ class Shop5Scraper:
                 print(" No hay datos para guardar")
                 return
 
-            supabase.table("ram_prices").upsert(rows).execute()
+            # supabase.table("ram_prices").upsert(rows).execute()
 
             print(f"***    Insertados {len(rows)} datos de tienda 5.    ***")
             print("\n" + "=" * 70)
