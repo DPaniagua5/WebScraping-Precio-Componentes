@@ -5,6 +5,7 @@ env/
 
 src/Tienda5.py
 src/Pruebas.py
+local_test_main.py
 
 __pycache__/
 

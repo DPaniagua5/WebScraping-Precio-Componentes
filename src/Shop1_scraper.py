@@ -105,18 +105,6 @@ class Shop1Scraper:
         }
         
         try:
-            # Extraer MARCA (span.css-ynol38)
-            try:
-                marca_elem = elemento.find_element(By.CSS_SELECTOR, "span.css-ynol38")
-                product['marca'] = marca_elem.text.strip()
-            except:
-                # Intentar selector alternativo
-                try:
-                    marca_elem = elemento.find_element(By.CSS_SELECTOR, "span[class*='ynol']")
-                    product['marca'] = marca_elem.text.strip()
-                except:
-                    pass
-            
             # Extraer NOMBRE (span.css-5xrf24)
             try:
                 nombre_elem = elemento.find_element(By.CSS_SELECTOR, "span.css-5xrf24")
@@ -129,7 +117,10 @@ class Shop1Scraper:
                 except:
                     # Usar todo el texto del elemento
                     product['nombre'] = elemento.text.strip().split('\n')[0] if elemento.text else ""
-            
+
+            # Extraer MARCA
+            product['marca'] = self.obtener_marca(product['nombre'])
+                    
             # Extraer precio_normal (span.css-185b4xi)
             try:
                 # Buscamos el elemento que contiene el texto "Precio normal"
@@ -188,6 +179,18 @@ class Shop1Scraper:
             print(f"Error procesando producto {e}")
         
         return product
+
+    def obtener_marca(self, texto: str) -> str:
+        marcas_conocidas = [
+            "Kingston", "Corsair", "Crucial", "Samsung", "ADATA", "XPG",
+            "Hiksemi", "Mushkin", "Patriot", "Lexar", "PNY", "Team Group",
+            "GSkill", "G.Skill"
+        ]
+        texto_upper = texto.upper()
+        for marca in marcas_conocidas:
+            if marca.upper() in texto_upper:
+                return marca
+        return ""
     
     #Ejecuta el scraping
     def scrape(self):
@@ -227,7 +230,7 @@ class Shop1Scraper:
                 for selector in selectores_alternativos:
                     elementos = self.driver.find_elements(By.CSS_SELECTOR, selector)
                     if elementos:
-                        print(f"** Encontrados {len(elementos)} con: {selector} **")
+                        # print(f"** Encontrados {len(elementos)} con: {selector} **")
                         break
             else:
                 print("\n")
