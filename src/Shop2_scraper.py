@@ -45,7 +45,9 @@ class Shop2Scraper:
 
     
     def obtener_marca(self, texto:str):
-        marcas_conocidas = ["XPG", "Kingston", "Corsair", "Crucial", "Samsung", "ADATA", "Hiksemi"]
+        marcas_conocidas = ["Kingston", "Corsair", "Crucial", "Samsung", "ADATA", "XPG",
+                    "Hiksemi", "Mushkin", "Patriot", "Lexar", "PNY", "Team Group",
+                    "GSkill", "G.Skill"]
         texto_upper = texto.upper()
         
         for marca in marcas_conocidas:
@@ -54,7 +56,9 @@ class Shop2Scraper:
         return None
 
     def es_notebook(self, texto: str):
-        return "notebook" in texto.lower()
+        palabras = ["notebook", "laptop", "sodimm", "so-dimm"]
+        texto_min = texto.lower()
+        return any(p in texto_min for p in palabras)
 
     def parse_product(self, p) -> dict | None:
         name_tag = p.select_one("h2.product-title")
@@ -91,7 +95,7 @@ class Shop2Scraper:
             # print("  Precio efectivo:", price)
             # print("  Precio normal: ", price_normal)
             # print("  Url: ", url)
-            # print(f"\n")
+            print(f"\n")
             
             return {
                 "store": "Rech",
